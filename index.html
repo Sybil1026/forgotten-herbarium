@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Forgotten Herbarium — Urban Waste Specimen Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a0908;
+  --bg-cabinet: #1a1612;
+  --bg-cell: #141110;
+  --bg-cell-hover: #1e1a16;
+  --velvet: #2a2118;
+  --brass: #c9a84c;
+  --brass-dim: #8a7235;
+  --brass-glow: #e8c65a;
+  --ivory: #f0e6d3;
+  --ivory-dim: #b8a890;
+  --parchment: #d4c5a9;
+  --rust: #8b4513;
+  --specimen-green: #4a6741;
+  --glass: rgba(255, 248, 235, 0.04);
+  --shadow-deep: rgba(0,0,0,0.7);
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Libre Baskerville', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-deep);
+  color: var(--ivory);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ====== HERO SECTION ====== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 24px;
+  position: relative;
+  background: radial-gradient(ellipse at 50% 40%, rgba(42,33,24,0.6) 0%, var(--bg-deep) 70%);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brass-dim), transparent);
+}
+
+.hero-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--brass-dim);
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.3s forwards;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(42px, 7vw, 88px);
+  font-weight: 300;
+  color: var(--ivory);
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.6s forwards;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--brass);
+}
+
+.hero-subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 2.5vw, 22px);
+  font-weight: 300;
+  color: var(--ivory-dim);
+  max-width: 640px;
+  margin-bottom: 48px;
+  font-style: italic;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.9s forwards;
+}
+
+.hero-question {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.8vw, 17px);
+  font-weight: 300;
+  color: var(--parchment);
+  max-width: 560px;
+  line-height: 1.8;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.2s forwards;
+  padding: 24px 32px;
+  border-left: 2px solid var(--brass-dim);
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.8s forwards;
+}
+
+.scroll-hint span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--brass-dim);
+}
+
+.scroll-arrow {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, var(--brass-dim), transparent);
+  animation: pulse 2s ease infinite;
+}
+
+/* ====== CABINET SECTION ====== */
+.cabinet-section {
+  padding: 80px 24px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 300;
+  color: var(--ivory);
+  margin-bottom: 12px;
+}
+
+.section-header p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--brass-dim);
+}
+
+/* ====== SPECIMEN GRID ====== */
+.specimen-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  background: var(--brass-dim);
+  border: 3px solid var(--brass-dim);
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 1px rgba(201, 168, 76, 0.2),
+    0 8px 32px rgba(0,0,0,0.5),
+    inset 0 0 60px rgba(0,0,0,0.3);
+  padding: 3px;
+}
+
+.specimen-cell {
+  background: var(--bg-cell);
+  aspect-ratio: 1;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 16px 12px;
+}
+
+.specimen-cell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.03), transparent 70%);
+  pointer-events: none;
+}
+
+.specimen-cell:hover {
+  background: var(--bg-cell-hover);
+  box-shadow: inset 0 0 30px rgba(201,168,76,0.05);
+}
+
+.specimen-cell:hover .cell-image {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.specimen-cell:hover .cell-name {
+  color: var(--brass);
+}
+
+.cell-number {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--brass-dim);
+  letter-spacing: 1px;
+  z-index: 2;
+}
+
+.cell-image {
+  width: 70%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--brass-dim);
+  opacity: 0.75;
+  transition: all 0.5s ease;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+
+.cell-name {
+  font-family: var(--font-display);
+  font-size: clamp(11px, 1.3vw, 14px);
+  font-style: italic;
+  color: var(--ivory-dim);
+  text-align: center;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.cell-date {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--brass-dim);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* Empty cell */
+.specimen-cell.empty-cell {
+  border: 1px dashed rgba(201,168,76,0.2);
+  background: rgba(10,9,8,0.8);
+  justify-content: center;
+}
+
+.empty-cell .cell-placeholder {
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px dashed rgba(201,168,76,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.empty-cell .cell-placeholder span {
+  font-family: var(--font-display);
+  font-size: 36px;
+  color: rgba(201,168,76,0.15);
+}
+
+/* ====== DETAIL OVERLAY ====== */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,4,3,0.92);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.detail-overlay.active {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 24px;
+}
+
+.detail-overlay.visible {
+  opacity: 1;
+}
+
+.detail-content {
+  max-width: 800px;
+  width: 100%;
+  background: var(--bg-cabinet);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 4px;
+  padding: 48px;
+  position: relative;
+  box-shadow: 0 16px 64px rgba(0,0,0,0.6);
+  margin-top: 20px;
+  margin-bottom: 40px;
+  transform: translateY(20px);
+  transition: transform 0.4s ease;
+}
+
+.detail-overlay.visible .detail-content {
+  transform: translateY(0);
+}
+
+.detail-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: none;
+  border: 1px solid rgba(201,168,76,0.2);
+  color: var(--ivory-dim);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 2px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.detail-close:hover {
+  border-color: var(--brass);
+  color: var(--brass);
+}
+
+.detail-image-wrap {
+  width: 100%;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  border: 1px solid rgba(201,168,76,0.1);
+}
+
+.detail-image-wrap img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.9) contrast(1.05);
+}
+
+.detail-image-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to top, var(--bg-cabinet), transparent);
+}
+
+.detail-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 20px;
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--brass-dim);
+  padding-top: 2px;
+}
+
+.meta-value {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ivory);
+}
+
+.meta-value.latin {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--brass);
+}
+
+.meta-value.etymology {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ivory-dim);
+}
+
+.detail-description {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--parchment);
+  margin-bottom: 32px;
+}
+
+/* Audio player */
+.audio-section {
+  background: rgba(201,168,76,0.03);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 4px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.audio-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--brass-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brass);
+  font-size: 16px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.audio-icon:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: var(--brass);
+}
+
+.audio-info {
+  flex: 1;
+}
+
+.audio-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--brass-dim);
+  margin-bottom: 4px;
+}
+
+.audio-desc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ivory-dim);
+  font-style: italic;
+}
+
+/* ====== EXEGESIS SECTION ====== */
+.exegesis-section {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 80px 24px 120px;
+}
+
+.exegesis-section .section-divider {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.exegesis-section .section-divider::before,
+.exegesis-section .section-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brass-dim));
+}
+
+.exegesis-section .section-divider::before { left: 0; }
+.exegesis-section .section-divider::after {
+  right: 0;
+  background: linear-gradient(90deg, var(--brass-dim), transparent);
+}
+
+.exegesis-section .section-divider h2 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--ivory);
+  display: inline-block;
+  padding: 0 24px;
+  background: var(--bg-deep);
+  position: relative;
+}
+
+.exegesis-text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 2;
+  color: var(--parchment);
+}
+
+.exegesis-text p {
+  margin-bottom: 24px;
+  text-indent: 2em;
+}
+
+.exegesis-text p:first-child {
+  text-indent: 0;
+}
+
+.exegesis-text p:first-child::first-letter {
+  font-family: var(--font-display);
+  font-size: 56px;
+  float: left;
+  line-height: 0.8;
+  margin-right: 8px;
+  margin-top: 6px;
+  color: var(--brass);
+}
+
+.exegesis-text .scholar {
+  color: var(--ivory);
+}
+
+/* ====== REFERENCES ====== */
+.references {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding-top: 40px;
+}
+
+.references h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--ivory);
+  margin-bottom: 24px;
+}
+
+.references p {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ivory-dim);
+  margin-bottom: 12px;
+  padding-left: 2em;
+  text-indent: -2em;
+}
+
+.references em {
+  font-style: italic;
+}
+
+/* ====== FOOTER ====== */
+.site-footer {
+  text-align: center;
+  padding: 40px 24px;
+  border-top: 1px solid rgba(201,168,76,0.05);
+}
+
+.site-footer p {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--brass-dim);
+}
+
+/* ====== ANIMATIONS ====== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  .specimen-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .detail-content {
+    padding: 32px 20px;
+  }
+
+  .detail-image-wrap img {
+    height: 250px;
+  }
+
+  .detail-meta {
+    grid-template-columns: 1fr;
+    gap: 4px 0;
+  }
+
+  .meta-label {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .specimen-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    padding: 2px;
+    border-width: 2px;
+  }
+
+  .cell-name {
+    font-size: 10px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ====== HERO ====== -->
+<section class="hero">
+  <div class="hero-label">EDUC90006 · Environmental Education · Semester 1, 2026</div>
+  <h1>The Forgotten <em>Herbarium</em></h1>
+  <p class="hero-subtitle">Urban Waste Specimen Box — A Digital Collection of the Anthropocene</p>
+  <div class="hero-question">
+    If people a thousand years from now discovered our waste, how would they study a faded coffee cup lid like we study dinosaur fossils today?
+  </div>
+  <div class="scroll-hint">
+    <span>Enter the Collection</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ====== CABINET ====== -->
+<section class="cabinet-section">
+  <div class="section-header fade-in">
+    <h2>Specimen Cabinet</h2>
+    <p>7 specimens · 5 locations · 1 semester · March–May 2026</p>
+  </div>
+
+  <div class="specimen-grid fade-in">
+
+    <!-- Specimen 1: Myki Card — 15 Mar -->
+    <div class="specimen-cell" onclick="openSpecimen(0)">
+      <span class="cell-number">001</span>
+      <img class="cell-image" src="images/myki.jpg" alt="Myki Card">
+      <div class="cell-name">Myki Mobilitas<br>Urbanus</div>
+      <div class="cell-date">15 · 03 · 2026</div>
+    </div>
+
+    <!-- Specimen 2: Tree Hollow — 29 Mar -->
+    <div class="specimen-cell" onclick="openSpecimen(1)">
+      <span class="cell-number">002</span>
+      <img class="cell-image" src="images/tree_hollow.jpg" alt="Tree Hollow Wrappers">
+      <div class="cell-name">Involucrum Arborum<br>Symbioticum</div>
+      <div class="cell-date">29 · 03 · 2026</div>
+    </div>
+
+    <!-- Specimen 3: Cider Bottle — 6 Apr -->
+    <div class="specimen-cell" onclick="openSpecimen(2)">
+      <span class="cell-number">003</span>
+      <img class="cell-image" src="images/cider_bottle.jpg" alt="Cider Bottle">
+      <div class="cell-name">Vitrum Recreatum<br>Litorale</div>
+      <div class="cell-date">06 · 04 · 2026</div>
+    </div>
+
+    <!-- Specimen 4: Cigarette — 17 Apr -->
+    <div class="specimen-cell" onclick="openSpecimen(3)">
+      <span class="cell-number">004</span>
+      <img class="cell-image" src="images/cigarette.jpg" alt="Cigarette Butts">
+      <div class="cell-name">Nicotiana Academicus<br>Relictum</div>
+      <div class="cell-date">17 · 04 · 2026</div>
+    </div>
+
+    <!-- Specimen 5: Umbrella — 28 Apr -->
+    <div class="specimen-cell" onclick="openSpecimen(4)">
+      <span class="cell-number">005</span>
+      <img class="cell-image" src="images/umbrella.png" alt="Broken Umbrella">
+      <div class="cell-name">Umbrellum Fractum<br>Melbournensis</div>
+      <div class="cell-date">28 · 04 · 2026</div>
+    </div>
+
+    <!-- Specimen 6: Coffee Cup — 3 May -->
+    <div class="specimen-cell" onclick="openSpecimen(5)">
+      <span class="cell-number">006</span>
+      <img class="cell-image" src="images/coffee_cup.jpg" alt="Coffee Cup">
+      <div class="cell-name">Coffea Vagus<br>Abandonum</div>
+      <div class="cell-date">03 · 05 · 2026</div>
+    </div>
+
+    <!-- Specimen 7: Price Tag — 9 May -->
+    <div class="specimen-cell" onclick="openSpecimen(6)">
+      <span class="cell-number">007</span>
+      <img class="cell-image" src="images/coles.png" alt="Price Tag">
+      <div class="cell-name">Pretium Lapsum<br>Commercium</div>
+      <div class="cell-date">09 · 05 · 2026</div>
+    </div>
+
+    <!-- Specimen 8: Empty -->
+    <div class="specimen-cell empty-cell" onclick="openSpecimen(7)">
+      <span class="cell-number">008</span>
+      <div class="cell-placeholder"><span>?</span></div>
+      <div class="cell-name">Species Ignota<br>Futurum</div>
+      <div class="cell-date">— · — · ——</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== EXEGESIS ====== -->
+<section class="exegesis-section">
+  <div class="section-divider fade-in">
+    <h2>Exegesis</h2>
+  </div>
+  <div class="exegesis-text fade-in">
+    <p>When I arrived in Melbourne from China at the beginning of this year, I walked past rubbish every day without seeing it. Coffee cups on benches, cigarette butts on footpaths, plastic wrappers caught in tree roots — they were part of the background of a new city that I was too busy navigating to examine closely. I was focused on tram routes, lecture rooms, and grocery prices. The ground beneath my feet was not something I thought about.</p>
+
+    <p>This began to change during EDUC90006. In the early weeks, <span class="scholar">Ingold's (2000)</span> distinction between the "globe" and the "sphere" unsettled something in me. He argues that we do not observe the environment from the outside, like scientists looking down at a globe; rather, we dwell within it, immersed in weather, movement, and material. I realised that my experience of Melbourne's environment was not happening in national parks or nature reserves — it was happening on the footpath between my apartment and the tram stop, on the wet ground outside Baillieu Library, on the sand beside the Yarra River. And the objects I had been stepping over were part of that environment, not separate from it.</p>
+
+    <p>By Week 7, when we read <span class="scholar">Plumwood's (2008)</span> essay on the invisibility of death and waste in modern consumer culture, I had already been photographing discarded objects for several weeks. But Plumwood gave me the language to understand what I was doing. She argues that we consume without confronting what remains — we drink coffee without thinking about the cup, we eat without thinking about the animal. I recognised this pattern in myself. I had been consuming Melbourne — its coffee, its transport, its supermarkets — without ever looking at what I left behind. The photographs I had been taking were, I now understood, an attempt to make that invisible residue visible again.</p>
+
+    <p><em>The Forgotten Herbarium</em> is the result of this shift. It is an interactive website designed to resemble a natural history museum specimen cabinet. When the viewer opens the page, they see a dark background — evoking the velvet display fabric of museum cases — with eight numbered cells arranged in a grid. Each cell contains a circular thumbnail photograph and a pseudo-Latin species name. This layout is intentional: the grid format borrows the visual authority of scientific classification, creating an immediate tension between the formality of the presentation and the ordinariness of the objects inside. By framing a Coles price tag or a crushed Myki card as a "specimen," the work asks the viewer to reconsider what deserves careful attention — echoing <span class="scholar">Snaza et al.'s (2014)</span> challenge to the assumption that only human subjects are worthy of study.</p>
+
+    <p>Clicking on a specimen opens a detailed record: an enlarged photograph, a collection ID, the pseudo-Latin name with etymology, the location and date of collection, and a written field description. Each record also includes an embedded audio recording of the ambient sound at the moment of collection — tram bells, wind, birdsong, supermarket announcements, footsteps. The audio is not decorative. It exists because the act of collecting each specimen was fundamentally embodied: I had to stop walking, crouch down, hold my phone close to the ground, and listen. <span class="scholar">Payne (1997)</span> argues that environmental education must engage the body and the senses, not just the mind. The audio preserves this sensory dimension, transporting the viewer from a screen back into the specific weather, noise, and atmosphere of each encounter.</p>
+
+    <p>The eighth cell is empty. It is labelled <em>Species Ignota Futurum</em> — unknown future species — and contains no photograph, no audio, no description. This is the most important cell in the herbarium, because it refuses to close the collection. It says: there are more specimens out there, in your own city, on your own street, under your own feet. The herbarium is not a finished archive. It is an invitation to keep noticing.</p>
+
+    <p>Looking back across the semester, the most significant change in me is not that I now know more about environmental theory — though I do. It is that I now walk differently. I look at the ground. I notice what has been left behind. I understand that environment is not somewhere else; it is the coffee cup on the bench beside the clock tower, the broken umbrella tangled in a bike rack in the rain, the snack wrappers slowly becoming part of a tree along the Birrarung. This herbarium is a record of that change.</p>
+  </div>
+</section>
+
+<!-- ====== REFERENCES ====== -->
+<section class="references fade-in">
+  <h3>References</h3>
+  <p>Ingold, T. (2000). Globes and spheres: The topology of environmentalism. In <em>The Perception of Environment: Essays on Livelihood, Dwelling and Skill</em> (pp. 259–272). Routledge.</p>
+  <p>Payne, P. (1997). Embodiment and environmental education. <em>Environmental Education Research</em>, 3(2), 109–240.</p>
+  <p>Plumwood, V. (2008). Tasteless: Towards a food-based approach to death. <em>Environmental Values</em>, 17(3), 323–330.</p>
+  <p>Snaza, N., Appelbaum, P., Bayne, S., Carlson, D., Morris, M., Rotas, N., Sandlin, J., Wallin, J., & Weaver, J. (2014). Toward a posthumanist education. <em>Journal of Curriculum Theorizing</em>, 30, 39–55.</p>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer class="site-footer">
+  <p>The Forgotten Herbarium · EDUC90006 · University of Melbourne · 2026</p>
+  <!-- EDIT: Add your student name, ID, seminar group, and tutor name below -->
+  <p style="margin-top:8px;">[Your Name] · [Student ID] · [Seminar Group] · Tutor: [Tutor Name]</p>
+</footer>
+
+<!-- ====== DETAIL OVERLAY ====== -->
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-content">
+    <button class="detail-close" onclick="closeSpecimen()">CLOSE ×</button>
+    <div class="detail-image-wrap">
+      <img id="detailImage" src="" alt="">
+    </div>
+    <div class="detail-meta">
+      <span class="meta-label">ID</span>
+      <span class="meta-value" id="detailId"></span>
+
+      <span class="meta-label">Species</span>
+      <span class="meta-value latin" id="detailLatin"></span>
+
+      <span class="meta-label">Etymology</span>
+      <span class="meta-value etymology" id="detailEtymology"></span>
+
+      <span class="meta-label">Location</span>
+      <span class="meta-value" id="detailLocation"></span>
+
+      <span class="meta-label">Date</span>
+      <span class="meta-value" id="detailDate"></span>
+    </div>
+    <div class="detail-description" id="detailDescription"></div>
+    <div class="audio-section" id="audioSection">
+      <div class="audio-icon" id="audioPlayBtn" onclick="toggleAudio()">▶</div>
+      <div class="audio-info">
+        <div class="audio-title">Ambient Sound</div>
+        <div class="audio-desc" id="audioDesc"></div>
+      </div>
+      <!-- EDIT: To add real audio, replace the src below with your .mp3 file path for each specimen -->
+      <audio id="specimenAudio" src=""></audio>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== SPECIMEN DATA ======
+// EDIT: You can modify any text below to update the website content.
+// To add audio: place .mp3 files in an "audio" folder and update the "audio" field.
+// To change images: replace files in the "images" folder (keep the same filenames).
+
+const specimens = [
+  {
+    id: "EE-2026-0315",
+    latin: "Myki Mobilitas Urbanus",
+    etymology: "Myki refers to Melbourne's transit card; Mobilitas means movement; Urbanus denotes the urban environment.",
+    location: "Near the tram stop, South Yarra",
+    date: "15 March 2026, Saturday afternoon, 3:20 PM",
+    image: "images/myki.jpg",
+    audio: "", // EDIT: e.g. "audio/myki_ambient.mp3"
+    audioDesc: "Street sounds, tram approaching, distant traffic",
+    description: `A Myki card, scratched and faded, lying face-up on wet asphalt near a metal pole. The green and grey surface still displays the PTV logo, though the magnetic strip is likely dead. In Melbourne, a Myki card is not merely a payment device; it is the key to the city's circulatory system — the trams, trains, and buses through which millions of bodies move daily. To hold a Myki is to belong to Melbourne's rhythms; to lose one is a minor disruption of identity. This particular specimen has been separated from its owner, and with it, a small archive of journeys: the morning commute to Parkville, the late-night train home from the city, the weekend trip to the beach. Now it lies on the ground, encoding routes that no one will ever read. When I found it, I was on my way home and felt a little tired from commuting. I touched my own Myki in my pocket — still warm, still working — and wondered how many journeys this abandoned one had carried before it ended up here.`
+  },
+  {
+    id: "EE-2026-0329",
+    latin: "Involucrum Arborum Symbioticum",
+    etymology: "Involucrum means wrapper or covering; Arborum refers to trees; Symbioticum suggests a symbiotic relationship.",
+    location: "Riverbank near South Yarra, along the Yarra River (Birrarung)",
+    date: "29 March 2026, Saturday morning, 11:30 AM",
+    image: "images/tree_hollow.jpg",
+    audio: "",
+    audioDesc: "River flowing, birds calling, wind through branches",
+    description: `A collection of snack wrappers — a pink Winners bar packet, an orange wrapper, and assorted paper fragments — lodged inside the hollow of a dead riverside tree. The wrappers have settled into the rotting wood as though planted there, their bright colours contrasting sharply with the grey and brown of bark. This specimen is perhaps the most unsettling in the collection, because it blurs the boundary between organism and artefact. The tree hollow, once a habitat for insects or small birds, has become a receptacle for human material. The wrappers are not simply sitting on the surface of nature; they are inside it, becoming part of its texture. Along the Birrarung — a river that the Wurundjeri people have lived with for tens of thousands of years — these objects form a new sedimentary layer, one that future archaeologists might study as evidence of how humans in the early twenty-first century fed themselves and disposed of the remains. When I found it, I felt uncomfortable, because the boundary between "nature" and "rubbish" suddenly became unclear. I almost didn't see them until I leaned closer to look at the tree itself. It made the environment feel more fragile and more entangled than I had expected.`
+  },
+  {
+    id: "EE-2026-0406",
+    latin: "Vitrum Recreatum Litorale",
+    etymology: "Vitrum means glass; Recreatum refers to recreation or leisure; Litorale means of the shore.",
+    location: "Sandy riverbank area, South Yarra, near the Yarra River",
+    date: "6 April 2026, Sunday afternoon, 3:50 PM",
+    image: "images/cider_bottle.jpg",
+    audio: "",
+    audioDesc: "Sand crunching underfoot, distant laughter, water lapping",
+    description: `A Somersby pear cider bottle, empty, lying on its side in sandy ground near the river. Beside it, a metal barbecue tong rests at an angle, suggesting a gathering that has ended. The sand bears faint traces of footprints and scattered grass. This specimen belongs to the genus of recreational waste — objects produced during moments of human pleasure and social connection, then abandoned when the moment passes. The cider was once cold, shared perhaps between friends on a warm afternoon by the water. Now the glass sits in the dirt, slowly being buried by wind-blown sand. Unlike plastic, this glass will not decompose for approximately one million years, making it one of the most enduring fossils in the Anthropocene record. The contrast is striking: ten minutes of enjoyment, one million years of geological presence. When I saw the bottle, I imagined people sitting there, talking, drinking and watching the river. My mood was mixed — it felt relaxed and lonely at the same time. The spot was quiet, but the objects told me someone had been happy here recently.`
+  },
+  {
+    id: "EE-2026-0417",
+    latin: "Nicotiana Academicus Relictum",
+    etymology: "Nicotiana is the genus of tobacco plants; Academicus refers to the academic setting; Relictum means left behind.",
+    location: "Entrance of Baillieu Library, University of Melbourne",
+    date: "17 April 2026, Thursday afternoon, 2:10 PM",
+    image: "images/cigarette.jpg",
+    audio: "",
+    audioDesc: "Library doors opening and closing, footsteps on brick, muffled conversation",
+    description: `Two cigarette butts lying on the tactile paving at the threshold of Baillieu Library, the university's main research library. Students step over them without looking down. This species is paradoxical: it is the material residue of a deeply embodied act — the inhale, the brief chemical relief, the slow exhale — yet once dropped, it becomes entirely invisible to human attention. Each butt contains cellulose acetate, a plastic that will persist in this environment for over a decade, long after the smoker has graduated and forgotten the stress that brought them here. Found at the boundary between interior knowledge and exterior air, these specimens mark the liminal space where bodies seek comfort before re-entering the regime of intellectual labour. When I noticed them near the library door, I was also feeling a bit overwhelmed by study. It made me think about how academic pressure does not only stay in the mind — it leaves marks on bodies and on the ground. The library doors opened and closed behind me as I crouched to photograph them. Nobody asked what I was doing.`
+  },
+  {
+    id: "EE-2026-0428",
+    latin: "Umbrellum Fractum Melbournensis",
+    etymology: "Umbrellum refers to umbrella; Fractum means broken; Melbournensis denotes its endemic habitat.",
+    location: "Bicycle parking area near Arts West, University of Melbourne",
+    date: "28 April 2026, Monday afternoon, 4:20 PM",
+    image: "images/umbrella.png",
+    audio: "",
+    audioDesc: "Rain on pavement, wind gusts, bicycle wheels on wet ground",
+    description: `A collapsed black umbrella tangled in a bicycle rack, its metal ribs bent outward like the skeleton of a creature defeated by wind. Beside it lies a detached rubber bicycle handlebar grip, slowly merging with the wet autumn leaves. This species is endemic to Melbourne, a city whose weather famously shifts between sun and storm within a single hour. The umbrella is a human attempt to maintain separation from the atmosphere — to stay dry, to remain above the rain — and its destruction is a small, everyday reminder that this separation always fails. We do not live on the surface of a globe observing weather from a distance; we dwell within a weather-world, where wind and rain are not external forces but the very medium of our existence. When I saw it, I was in a hurry and a little annoyed by the unpredictable weather. But the broken umbrella also felt oddly familiar — I have broken two umbrellas this semester alone. It looked like a small, shared defeat in the daily negotiation between humans and Melbourne's sky.`
+  },
+  {
+    id: "EE-2026-0503",
+    latin: "Coffea Vagus Abandonum",
+    etymology: "Coffea refers to coffee; Vagus means wandering; Abandonum suggests abandonment.",
+    location: "Stone ledge near South Lawn, opposite the Old Arts clock tower, University of Melbourne",
+    date: "3 May 2026, Saturday morning, 10:45 AM",
+    image: "images/coffee_cup.jpg",
+    audio: "",
+    audioDesc: "Tram bells on Swanston Street, students talking, birds in South Lawn trees",
+    description: `A solitary takeaway coffee cup, still upright, left on a stone ledge as though its owner intended to return. Found near South Lawn during morning hours, surrounded by passing students and the distant sound of tram bells on Swanston Street. The cardboard sleeve still bears the warmth-stain of a recent grip. This species thrives in the ecosystem of tertiary education, appearing most frequently between 8 and 10 a.m. during semester. It represents a brief transaction — approximately five dollars exchanged for twelve minutes of warmth and alertness — after which the vessel is discarded, its purpose entirely exhausted. Yet the cup does not disappear. Its paper body will take years to decompose; its plastic lid, decades. It participates in the campus environment long after the caffeine has been metabolised. When I found it, I had just finished class and felt tired but strangely comforted, because this small object looked like a familiar trace of student survival. I walked past this bench twice before I noticed it sitting there, waiting for no one.`
+  },
+  {
+    id: "EE-2026-0509",
+    latin: "Pretium Lapsum Commercium",
+    etymology: "Pretium means price; Lapsum means fallen; Commercium refers to trade or commerce.",
+    location: "Coles supermarket, South Yarra",
+    date: "9 May 2026, Friday evening, 6:15 PM",
+    image: "images/coles.png",
+    audio: "",
+    audioDesc: "Shopping trolley wheels, beeping checkout, background music, footsteps on polished floor",
+    description: `A $4.50 price sticker and a small fragment of patterned wrapping paper, both lying on the polished concrete floor of a Coles supermarket. Shopping trolleys roll past them. The floor is spotless except for these two objects, suggesting they fell recently and have not yet been swept into the system. The price tag is especially striking: it has been torn from its product but still declares a value — $4.50 for something that is now nowhere to be seen. In the logic of the supermarket, objects exist only as long as they carry value. The moment a tag separates from its commodity, it becomes waste — invisible, meaningless, destined for the floor. These specimens invite reflection on the invisible infrastructure of consumption: the tags, receipts, and packaging that we generate and discard without conscious thought every time we buy food to sustain our bodies. When I saw them in Coles, I was choosing dinner and comparing prices, very aware of my student budget. I felt that this tiny price tag made consumption less abstract — every choice in the supermarket is shaped by money, need and habit. I was buying rice when I noticed them under my shoe.`
+  },
+  {
+    id: "EE-2026-0520",
+    latin: "Species Ignota Futurum",
+    etymology: "Ignota means unknown; Futurum means future or yet to come.",
+    location: "Not yet found — waiting to be noticed",
+    date: "20 May 2026",
+    image: "",
+    audio: "",
+    audioDesc: "",
+    description: `This cell is intentionally left empty. It represents a species that has not yet been discovered — or one that has not yet been created. What will humans leave behind tomorrow, next year, or in a hundred years? Will it be a fragment of a device we have not yet invented, or the packaging of a food we have not yet learned to eat? The empty space is an invitation: to the viewer, to imagine what might fill it; and to the collector, to keep looking. When I left this space empty, I felt it was important not to close the project too quickly. The environment is always producing new encounters, and the next specimen may appear when someone simply slows down enough to notice it. This herbarium is not finished. It never will be.`
+  }
+];
+
+// ====== FUNCTIONS ======
+function openSpecimen(index) {
+  const s = specimens[index];
+  const overlay = document.getElementById('detailOverlay');
+  const audioSection = document.getElementById('audioSection');
+
+  document.getElementById('detailId').textContent = s.id;
+  document.getElementById('detailLatin').textContent = s.latin;
+  document.getElementById('detailEtymology').textContent = s.etymology;
+  document.getElementById('detailLocation').textContent = s.location;
+  document.getElementById('detailDate').textContent = s.date;
+  document.getElementById('detailDescription').textContent = s.description;
+
+  const img = document.getElementById('detailImage');
+  if (s.image) {
+    img.src = s.image;
+    img.style.display = 'block';
+    document.querySelector('.detail-image-wrap').style.display = 'block';
+  } else {
+    img.style.display = 'none';
+    document.querySelector('.detail-image-wrap').style.display = 'none';
+  }
+
+  if (s.audio) {
+    document.getElementById('specimenAudio').src = s.audio;
+    document.getElementById('audioDesc').textContent = s.audioDesc;
+    audioSection.style.display = 'flex';
+  } else if (s.audioDesc) {
+    document.getElementById('audioDesc').textContent = s.audioDesc + ' (audio file pending)';
+    audioSection.style.display = 'flex';
+  } else {
+    audioSection.style.display = 'none';
+  }
+
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => {
+    overlay.classList.add('active', 'visible');
+  });
+}
+
+function closeSpecimen() {
+  const overlay = document.getElementById('detailOverlay');
+  const audio = document.getElementById('specimenAudio');
+  audio.pause();
+  audio.currentTime = 0;
+  document.getElementById('audioPlayBtn').textContent = '▶';
+
+  overlay.classList.remove('visible');
+  setTimeout(() => {
+    overlay.classList.remove('active');
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }, 400);
+}
+
+function toggleAudio() {
+  const audio = document.getElementById('specimenAudio');
+  const btn = document.getElementById('audioPlayBtn');
+  if (audio.src && !audio.src.endsWith('/')) {
+    if (audio.paused) {
+      audio.play();
+      btn.textContent = '❚❚';
+    } else {
+      audio.pause();
+      btn.textContent = '▶';
+    }
+  }
+}
+
+// Close on overlay background click
+document.getElementById('detailOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeSpecimen();
+});
+
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeSpecimen();
+});
+
+// Scroll fade-in animation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
